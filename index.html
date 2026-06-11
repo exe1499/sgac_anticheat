@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGAC Anti-Cheat BETA | Strike Games</title>
+    <style>
+        :root {
+            --bg: #0a0a0f; --bg2: #12121a; --bg3: #1a1a25;
+            --accent: #5865f2; --accent2: #8b5cf6; --gold: #f0c040;
+            --green: #3fb950; --red: #f85149; --yellow: #d2991d;
+            --text: #e6e6e6; --text2: #8b949e; --border: #21262d;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+
+        .warning-banner {
+            background: linear-gradient(90deg, #f85149, #d73a49);
+            color: white; text-align: center; padding: 14px;
+            font-weight: 700; font-size: 15px;
+            position: sticky; top: 0; z-index: 2000;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.85;} }
+        .warning-banner .countdown {
+            background: rgba(0,0,0,0.3); padding: 4px 12px;
+            border-radius: 20px; margin-left: 10px; font-size: 14px;
+        }
+
+        nav {
+            background: rgba(18,18,26,0.95); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 40px; height: 70px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-left { display:flex; align-items:center; gap:15px; }
+        .studio-logo {
+            font-size: 12px; font-weight: 700; color: var(--gold);
+            border: 1px solid var(--gold); padding: 4px 10px;
+            border-radius: 20px; letter-spacing: 1px;
+        }
+        .logo {
+            font-size: 22px; font-weight: 800;
+            background: linear-gradient(135deg,var(--accent),var(--accent2));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            text-decoration:none;
+        }
+        .beta-tag {
+            background: var(--yellow); color: #000;
+            font-size: 11px; font-weight: 700;
+            padding: 3px 10px; border-radius: 20px; margin-left: 8px;
+        }
+        .nav-links { display:flex; gap:25px; list-style:none; }
+        .nav-links a { color:var(--text2); text-decoration:none; font-weight:500; transition:color 0.3s; }
+        .nav-links a:hover { color:var(--text); }
+        .btn {
+            padding:12px 28px; border-radius:8px; font-weight:600;
+            text-decoration:none; transition:all 0.3s; cursor:pointer;
+            font-size:14px; display:inline-block; border:none;
+        }
+        .btn-primary { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(88,101,242,0.3); }
+        .btn-download { background:var(--green); color:white; font-size:16px; padding:16px 40px; }
+        .btn-download:hover { transform:translateY(-2px); }
+
+        .hero {
+            min-height:80vh; display:flex; align-items:center; justify-content:center;
+            text-align:center; padding:100px 20px 60px;
+            background:radial-gradient(ellipse at center,rgba(88,101,242,0.08) 0%,transparent 70%);
+        }
+        .hero-content { max-width:800px; }
+        .hero .studio {
+            color: var(--gold); font-size: 14px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px;
+        }
+        .hero h1 { font-size:48px; font-weight:900; margin-bottom:15px; }
+        .hero h1 span {
+            background:linear-gradient(135deg,var(--accent),var(--accent2),var(--green));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .hero p { font-size:17px; color:var(--text2); margin-bottom:25px; }
+        .hero-buttons { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; }
+        .beta-notice {
+            background: var(--bg2); border:1px solid var(--yellow);
+            border-radius:12px; padding:15px 25px; margin-top:20px;
+            display:inline-block; color:var(--yellow); font-size:14px;
+        }
+
+        .requirements {
+            padding:60px 40px; max-width:1000px; margin:40px auto;
+            background:var(--bg2); border:1px solid var(--border); border-radius:16px;
+        }
+        .requirements h2 { text-align:center; font-size:32px; margin-bottom:30px; }
+        .req-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
+        .req-item {
+            background:var(--bg3); border:1px solid var(--border);
+            border-radius:12px; padding:25px;
+        }
+        .req-item h4 { color:var(--accent); margin-bottom:8px; }
+        .req-item .check { color:var(--green); }
+        .req-item .warn { color:var(--yellow); }
+        .req-item .icon { font-size:24px; margin-bottom:8px; }
+
+        .end-support {
+            background: var(--bg2); border:2px solid var(--red);
+            border-radius:16px; padding:40px; max-width:700px;
+            margin:40px auto; text-align:center;
+        }
+        .end-support h3 { color:var(--red); font-size:24px; margin-bottom:10px; }
+        .end-support .date { font-size:40px; font-weight:900; color:var(--red); }
+        .end-support p { color:var(--text2); margin-top:10px; }
+
+        .features { padding:80px 40px; max-width:1200px; margin:0 auto; }
+        .features h2 { text-align:center; font-size:32px; margin-bottom:50px; }
+        .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:25px; }
+        .feature-card {
+            background:var(--bg2); border:1px solid var(--border);
+            border-radius:14px; padding:35px 25px; transition:all 0.3s;
+        }
+        .feature-card:hover { border-color:var(--accent); transform:translateY(-4px); }
+        .feature-card h3 { font-size:20px; margin-bottom:12px; color:var(--accent); }
+        .feature-card p { color:var(--text2); font-size:14px; }
+
+        .cheats { padding:80px 40px; max-width:1000px; margin:0 auto; }
+        .cheats h2 { text-align:center; font-size:32px; margin-bottom:40px; }
+        .cheats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; }
+        .cheat-item {
+            background:var(--bg3); border:1px solid var(--border);
+            border-radius:10px; padding:18px; display:flex; align-items:center; gap:12px;
+        }
+        .cheat-dot { width:10px; height:10px; border-radius:50%; background:var(--red); flex-shrink:0; }
+        .cheat-dot.blocked { background:var(--green); }
+        .cheat-item h4 { font-size:13px; }
+
+        .download { padding:80px 40px; text-align:center; }
+        .download h2 { font-size:32px; margin-bottom:15px; }
+        .download p { color:var(--text2); margin-bottom:25px; }
+        .version { color:var(--text2); font-size:13px; margin-top:15px; }
+
+        footer {
+            background:var(--bg2); border-top:1px solid var(--border);
+            padding:30px 40px; text-align:center; color:var(--text2); font-size:13px;
+        }
+        footer .studio-footer {
+            color: var(--gold); font-weight: 700;
+            letter-spacing: 2px; margin-bottom: 10px;
+        }
+        footer a { color:var(--accent); text-decoration:none; }
+
+        @media(max-width:768px) {
+            nav { padding:0 20px; }
+            .nav-links { display:none; }
+            .hero h1 { font-size:32px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="warning-banner">
+        ВНИМАНИЕ: Поддержка Windows 10 будет прекращена 14 октября 2026 года
+        <span class="countdown" id="countdown">Загрузка...</span>
+    </div>
+
+    <nav>
+        <div class="nav-left">
+            <span class="studio-logo">STRIKE GAMES</span>
+            <a href="#" class="logo">SGAC<span class="beta-tag">BETA</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">Возможности</a></li>
+            <li><a href="#requirements">Требования</a></li>
+            <li><a href="#cheats">Читы</a></li>
+            <li><a href="#download">Скачать</a></li>
+        </ul>
+        <a href="#download" class="btn btn-primary">Скачать BETA</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="studio">Strike Games</div>
+            <h1><span>SGAC Anti-Cheat</span> BETA</h1>
+            <p>Разработано Strike Games. Защита CS2 с DeepSeek AI. Блокировка WallHack, AimBot, TriggerBot. Требуется Secure Boot + TPM 2.0.</p>
+            <div class="hero-buttons">
+                <a href="#download" class="btn btn-download">Скачать BETA</a>
+                <a href="#requirements" class="btn btn-primary" style="background:transparent;border:2px solid var(--accent);">Требования</a>
+            </div>
+            <div class="beta-notice">
+                БЕТА-ВЕРСИЯ от Strike Games. Античит в стадии тестирования.
+            </div>
+        </div>
+    </section>
+
+    <section class="requirements" id="requirements">
+        <h2>Системные требования</h2>
+        <div class="req-grid">
+            <div class="req-item">
+                <div class="icon">&#128421;</div>
+                <h4 class="check">Windows 10/11</h4>
+                <p>64-bit. Поддержка Win10 до 14.10.2026</p>
+            </div>
+            <div class="req-item">
+                <div class="icon">&#128274;</div>
+                <h4 class="check">Secure Boot</h4>
+                <p>Обязательно включен в BIOS/UEFI</p>
+            </div>
+            <div class="req-item">
+                <div class="icon">&#128187;</div>
+                <h4 class="check">TPM 2.0</h4>
+                <p>Trusted Platform Module 2.0</p>
+            </div>
+            <div class="req-item">
+                <div class="icon">&#9889;</div>
+                <h4>Python 3.8+</h4>
+                <p>Установленный Python</p>
+            </div>
+            <div class="req-item">
+                <div class="icon">&#128451;</div>
+                <h4>Администратор</h4>
+                <p>Запуск от имени Администратора</p>
+            </div>
+            <div class="req-item">
+                <div class="icon">&#128179;</div>
+                <h4>4GB RAM</h4>
+                <p>8GB рекомендуется</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="end-support">
+        <h3>Поддержка Windows 10 будет прекращена</h3>
+        <div class="date" id="end-date">14 октября 2026</div>
+        <p>Strike Games рекомендует обновиться до Windows 11. После этой даты SGAC будет работать только на Windows 11.</p>
+    </section>
+
+    <section class="features" id="features">
+        <h2>Возможности BETA</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>DeepSeek AI</h3>
+                <p>Нейросеть анализирует процессы и поведение. Точность до 95%.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Secure Boot</h3>
+                <p>Проверка целостности загрузки. Защита от руткитов на уровне ядра.</p>
+            </div>
+            <div class="feature-card">
+                <h3>TPM 2.0</h3>
+                <p>Аппаратное шифрование. Ключи защиты в доверенном модуле.</p>
+            </div>
+            <div class="feature-card">
+                <h3>25+ читов</h3>
+                <p>exloader, iniuria, neverlose, gamesense, onetap, aimware и другие.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Мониторинг 24/7</h3>
+                <p>Сканирование каждые 2 секунды. Мгновенная блокировка.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Запуск CS2</h3>
+                <p>Встроенный лаунчер с полной очисткой системы перед игрой.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cheats" id="cheats">
+        <h2>Блокируемые читы</h2>
+        <div class="cheats-grid">
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>exloader</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>iniuria</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>neverlose</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>gamesense</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>onetap</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>aimware</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>plaguecheat</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>oxide</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>WallHack/ESP</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>AimBot</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>TriggerBot</h4></div>
+            <div class="cheat-item"><div class="cheat-dot blocked"></div><h4>RadarHack</h4></div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <h2>Скачать SGAC BETA</h2>
+        <p>Версия 13.0.0 BETA | Strike Games | DeepSeek AI</p>
+        <p style="font-size:13px;color:var(--red);">Требуется Secure Boot + TPM 2.0</p>
+        <a href="#" class="btn btn-download">Скачать для Windows</a>
+        <p class="version">Поддержка Windows 10 до 14 октября 2026</p>
+    </section>
+
+    <footer>
+        <div class="studio-footer">STRIKE GAMES</div>
+        <p>&copy; 2024-2026 Strike Games. Все права защищены.</p>
+        <p>SGAC Anti-Cheat BETA | <a href="#">GitHub</a> | <a href="#">Discord</a></p>
+        <p style="margin-top:5px;font-size:11px;">Поддержка Windows 10 до 14.10.2026</p>
+    </footer>
+
+    <script>
+        const endDate = new Date('2026-10-14T00:00:00');
+        function updateCountdown() {
+            const now = new Date();
+            const diff = endDate - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown').textContent = 'Осталось: ' + days + ' дней';
+            document.getElementById('end-date').textContent = '14 октября 2026 (через ' + days + ' дней)';
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 3600000);
+    </script>
+
+</body>
+</html>
